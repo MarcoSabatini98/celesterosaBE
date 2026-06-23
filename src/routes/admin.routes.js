@@ -9,6 +9,8 @@ const validate = require('../middlewares/validate.middleware');
 const { upload } = require('../config/upload');
 const v = require('../validators/admin.validator');
 const ctrl = require('../controllers/admin.catalog.controller');
+const orderCtrl = require('../controllers/order.controller');
+const { statusSchema } = require('../validators/order.validator');
 
 /**
  * @swagger
@@ -47,5 +49,10 @@ router.delete('/variants/:variantId', ctrl.deleteVariant);
 // ── Immagini (multipart) ──
 router.post('/products/:id/images', upload.array('images', 8), ctrl.addImages);
 router.delete('/images/:imageId', ctrl.deleteImage);
+
+// ── Ordini (backoffice) ──
+router.get('/orders', orderCtrl.adminList);
+router.get('/orders/:orderNumber', orderCtrl.adminGet);
+router.patch('/orders/:orderNumber/status', validate(statusSchema), orderCtrl.adminUpdateStatus);
 
 module.exports = router;

@@ -21,9 +21,10 @@ router.get('/health', (req, res) =>
 // Moduli applicativi.
 router.use('/auth', require('./auth.routes'));
 router.use('/', require('./catalog.routes'));
+router.use('/cart', require('./cart.routes'));
+router.use('/checkout', require('./checkout.routes'));
+router.use('/orders', require('./order.routes'));
+router.use('/stripe', require('./stripe.routes'));
 router.use('/admin', require('./admin.routes'));
-
-// Le altre route (cart, orders, stripe...) verranno montate qui nelle fasi
-// successive.
 
 module.exports = router;

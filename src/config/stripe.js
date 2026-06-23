@@ -9,15 +9,20 @@ const logger = require('../utils/logger');
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 
+// Le chiavi di esempio (contengono "xxx") non sono valide: in quel caso si
+// lavora in modalità SIMULATA (sandbox locale) senza chiamare l'API Stripe.
+const isPlaceholder = !secretKey || secretKey.includes('xxx');
+
 let stripe = null;
-if (secretKey && secretKey.startsWith('sk_')) {
+if (!isPlaceholder && secretKey.startsWith('sk_')) {
   stripe = new Stripe(secretKey, { apiVersion: '2024-06-20' });
 } else {
-  logger.warn('STRIPE_SECRET_KEY non configurata: i pagamenti sono disabilitati.');
+  logger.warn('Stripe in modalità SIMULATA: chiavi non configurate (sandbox locale).');
 }
 
 module.exports = {
   stripe,
+  enabled: !!stripe, // true solo con chiavi reali
   currency: process.env.STRIPE_CURRENCY || 'eur',
   webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
   publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
