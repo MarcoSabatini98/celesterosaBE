@@ -20,6 +20,9 @@ function getTransporter() {
       process.env.MAIL_USER || process.env.MAIL_PASSWORD
         ? { user: process.env.MAIL_USER, pass: process.env.MAIL_PASSWORD }
         : undefined,
+    connectionTimeout: 5000,
+    greetingTimeout: 5000,
+    socketTimeout: 7000,
   });
 
   return transporter;

@@ -3,6 +3,7 @@
 const asyncHandler = require('../utils/async.handler');
 const { sendSuccess } = require('../utils/http.response');
 const orders = require('../services/order.service');
+const emailService = require('../services/email.service');
 const db = require('../models');
 const AppError = require('../errors/AppError');
 
@@ -38,6 +39,10 @@ const adminUpdateStatus = asyncHandler(async (req, res) => {
   const ts = STATUS_TIMESTAMP[status];
   if (ts) order[ts] = new Date();
   await order.save();
+
+  // Notifica al cliente quando l'ordine passa a "spedito".
+  if (status === 'shipped') emailService.sendShippingNotification(order).catch(() => {});
+
   const full = await db.Order.findByPk(order.id, {
     include: [{ association: 'items' }, { association: 'payment' }, { association: 'invoice' }],
   });

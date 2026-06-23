@@ -10,6 +10,7 @@ const { upload } = require('../config/upload');
 const v = require('../validators/admin.validator');
 const ctrl = require('../controllers/admin.catalog.controller');
 const orderCtrl = require('../controllers/order.controller');
+const invoiceCtrl = require('../controllers/invoice.controller');
 const { statusSchema } = require('../validators/order.validator');
 
 /**
@@ -54,5 +55,8 @@ router.delete('/images/:imageId', ctrl.deleteImage);
 router.get('/orders', orderCtrl.adminList);
 router.get('/orders/:orderNumber', orderCtrl.adminGet);
 router.patch('/orders/:orderNumber/status', validate(statusSchema), orderCtrl.adminUpdateStatus);
+
+// ── Fatture (backoffice) ──
+router.get('/invoices', invoiceCtrl.adminList);
 
 module.exports = router;

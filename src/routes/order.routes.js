@@ -5,6 +5,7 @@ const router = express.Router();
 
 const { requireAuth } = require('../middlewares/auth.middleware');
 const ctrl = require('../controllers/order.controller');
+const invoiceCtrl = require('../controllers/invoice.controller');
 
 /**
  * @swagger
@@ -39,5 +40,18 @@ router.get('/', ctrl.myList);
  *       404: { description: Non trovato }
  */
 router.get('/:orderNumber', ctrl.myGet);
+
+/**
+ * @swagger
+ * /orders/{orderNumber}/invoice:
+ *   get:
+ *     summary: Fattura PDF dell'ordine (URL al documento)
+ *     tags: [Ordini]
+ *     security: [{ bearerAuth: [] }]
+ *     responses:
+ *       200: { description: Dati fattura con pdf_url }
+ *       404: { description: Non disponibile }
+ */
+router.get('/:orderNumber/invoice', invoiceCtrl.myInvoice);
 
 module.exports = router;
