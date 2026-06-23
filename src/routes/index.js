@@ -20,8 +20,9 @@ router.get('/health', (req, res) =>
 
 // Moduli applicativi.
 router.use('/auth', require('./auth.routes'));
+router.use('/', require('./catalog.routes'));
 
-// Le altre route (catalog, cart, orders, admin, stripe...) verranno montate
-// qui nelle fasi successive.
+// Le altre route (cart, orders, admin, stripe...) verranno montate qui nelle
+// fasi successive.
 
 module.exports = router;
