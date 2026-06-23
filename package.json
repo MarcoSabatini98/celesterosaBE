@@ -35,6 +35,25 @@
   ],
   "author": "Marco Sabatini",
   "license": "MIT",
+  "jest": {
+    "testEnvironment": "node",
+    "projects": [
+      {
+        "displayName": "unit",
+        "testEnvironment": "node",
+        "testMatch": [
+          "<rootDir>/src/tests/unit/**/*.test.js"
+        ]
+      },
+      {
+        "displayName": "integration",
+        "testEnvironment": "node",
+        "testMatch": [
+          "<rootDir>/src/tests/integration/**/*.test.js"
+        ]
+      }
+    ]
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "compression": "^1.8.1",

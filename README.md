@@ -2,7 +2,27 @@
 
 Backend dell'e-commerce **celesterosa** — negozio online di strumenti musicali. API REST in Node.js + Express con database MariaDB, gestione catalogo dettagliato, area amministrativa, pagamenti online (Stripe), fatturazione PDF ed email automatiche.
 
-> Stato: in sviluppo iniziale. Il branch attivo è `develop`; `main` è protetto e aggiornato solo tramite Pull Request.
+> Stato: backend funzionante end-to-end (catalogo, auth, admin, carrello, checkout, pagamenti, fatture, email, job, test). Branch di lavoro su feature; merge in `develop` via PR, `main` protetto.
+
+## API principali (`/api/v1`)
+
+| Area | Endpoint |
+|------|----------|
+| Auth | `POST /auth/register`, `POST /auth/login`, `POST /auth/refresh`, `GET /auth/me` |
+| Catalogo | `GET /categories`, `GET /categories/:slug`, `GET /brands`, `GET /products` (filtri/ricerca/sort/paginazione), `GET /products/:slug` |
+| Carrello | `GET /cart`, `POST /cart/items`, `PUT /cart/items/:id`, `DELETE /cart/items/:id` (guest via header `X-Cart-Token`) |
+| Checkout | `POST /checkout`, `POST /stripe/simulate-payment`, `POST /stripe/webhook` |
+| Ordini | `GET /orders`, `GET /orders/:orderNumber`, `GET /orders/:orderNumber/invoice` |
+| Admin | `/admin/brands`, `/admin/categories`, `/admin/products`, `/admin/variants`, `/admin/products/:id/images` (upload), `/admin/orders`, `/admin/invoices` |
+
+Documentazione interattiva su `/api-docs` (Swagger).
+
+## Account demo (seed)
+
+- Admin: `admin@celesterosa.it` / `Admin123!`
+- Cliente: `cliente@example.com` / `Cliente123!`
+
+> Stripe gira in modalità **simulata** finché non si inseriscono chiavi di test reali in `.env`; in simulazione il pagamento si conferma con `POST /stripe/simulate-payment`.
 
 ## Funzionalità previste
 
@@ -67,6 +87,18 @@ cp .env.example .env      # poi compila i valori
 docker compose up -d      # MariaDB + MinIO
 npm run db:setup          # create + migrate + seed
 npm run dev
+```
+
+## Script utili
+
+```bash
+npm run dev          # avvio con nodemon (+ docker compose up)
+npm run migrate      # esegue le migrations
+npm run seed         # popola brand, categorie, prodotti, utenti demo
+npm run db:reset     # rigenera schema e seed
+npm test             # test (unit + integration)
+npm run test:unit    # solo unit
+npm run lint         # ESLint
 ```
 
 ## Sicurezza e segreti

@@ -33,6 +33,11 @@ const start = async () => {
       logger.info(`Server avviato su http://localhost:${PORT}`);
       logger.info(`Documentazione su http://localhost:${PORT}/api-docs`);
     });
+
+    // Job pianificati (cron). Saltati in ambiente di test.
+    if (process.env.NODE_ENV !== 'test') {
+      require('./src/jobs').startJobs();
+    }
   } catch (error) {
     logger.error('Errore connessione database', error);
     process.exit(1);
