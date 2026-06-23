@@ -4,7 +4,7 @@
 // per evitare collisioni e mantenere ordinata la struttura del bucket.
 
 const crypto = require('crypto');
-const { minioClient, BUCKET, publicUrl } = require('../config/minio');
+const { minioClient, BUCKET } = require('../config/minio');
 
 const EXT_BY_MIME = {
   'image/jpeg': 'jpg',
@@ -37,4 +37,4 @@ async function removeObject(key) {
   await minioClient.removeObject(BUCKET, key);
 }
 
-module.exports = { uploadImage, uploadPdf, removeObject, publicUrl };
+module.exports = { uploadImage, uploadPdf, removeObject };

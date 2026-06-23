@@ -6,6 +6,7 @@
 const AppError = require('../errors/AppError');
 const repo = require('../repositories/catalog.repository');
 const db = require('../models');
+const { paginate } = require('../utils/paginate');
 const { publicUrl } = require('../config/minio');
 
 function num(v) {
@@ -169,13 +170,7 @@ async function listProducts(query) {
     limit: query.limit,
   });
 
-  return {
-    items: rows.map(serializeProductCard),
-    page: query.page,
-    limit: query.limit,
-    total: count,
-    total_pages: Math.ceil(count / query.limit) || 1,
-  };
+  return paginate(rows, count, query.page, query.limit, serializeProductCard);
 }
 
 async function getProduct(slug) {

@@ -72,4 +72,4 @@ async function sendShippingNotification(order) {
   return sendMail({ to: order.email, subject: `Ordine ${order.order_number} spedito`, html });
 }
 
-module.exports = { sendMail, sendOrderConfirmation, sendShippingNotification };
+module.exports = { sendOrderConfirmation, sendShippingNotification };

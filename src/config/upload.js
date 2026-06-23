@@ -17,4 +17,4 @@ const upload = multer({
   },
 });
 
-module.exports = { upload, ALLOWED };
+module.exports = { upload };

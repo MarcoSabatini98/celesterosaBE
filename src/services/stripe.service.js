@@ -148,4 +148,4 @@ async function simulatePayment(paymentIntentId) {
   return order;
 }
 
-module.exports = { createIntentForOrder, fulfillPaidOrder, handleWebhook, simulatePayment };
+module.exports = { createIntentForOrder, handleWebhook, simulatePayment };

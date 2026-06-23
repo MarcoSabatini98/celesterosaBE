@@ -7,6 +7,7 @@ const { Op } = require('sequelize');
 const db = require('../models');
 const AppError = require('../errors/AppError');
 const { toSlug } = require('../../database/seed-helpers/slug');
+const { paginate, parsePageParams } = require('../utils/paginate');
 const storage = require('./storage.service');
 
 // ─── Brand ────────────────────────────────────────────────────
@@ -63,9 +64,10 @@ async function createAttributeDefinition(categoryId, data) {
 }
 
 // ─── Prodotti ─────────────────────────────────────────────────
-async function listProducts({ page = 1, limit = 20, q = null }) {
+async function listProducts(query = {}) {
+  const { page, limit } = parsePageParams(query);
   const where = {};
-  if (q) where[Op.or] = [{ name: { [Op.like]: `%${q}%` } }, { sku: { [Op.like]: `%${q}%` } }];
+  if (query.q) where[Op.or] = [{ name: { [Op.like]: `%${query.q}%` } }, { sku: { [Op.like]: `%${query.q}%` } }];
   const { count, rows } = await db.Product.findAndCountAll({
     where,
     include: [
@@ -76,7 +78,7 @@ async function listProducts({ page = 1, limit = 20, q = null }) {
     limit,
     offset: (page - 1) * limit,
   });
-  return { items: rows, page, limit, total: count, total_pages: Math.ceil(count / limit) || 1 };
+  return paginate(rows, count, page, limit);
 }
 
 async function getProduct(id) {

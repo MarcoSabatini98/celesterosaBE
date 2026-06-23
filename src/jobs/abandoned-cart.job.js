@@ -43,4 +43,6 @@ function start() {
   logger.info(`Job pulizia carrelli pianificato (${SCHEDULE}, soglia ${ABANDON_DAYS}g)`);
 }
 
+// runOnce è esportata di proposito: esecuzione manuale/da test del job.
+// fallow-ignore-next-line unused-exports
 module.exports = { start, runOnce };

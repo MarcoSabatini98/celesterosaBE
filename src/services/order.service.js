@@ -5,6 +5,7 @@
 const db = require('../models');
 const AppError = require('../errors/AppError');
 const { round2 } = require('../utils/pricing');
+const { paginate, parsePageParams } = require('../utils/paginate');
 const { publicUrl } = require('../config/minio');
 
 function serializeOrder(order) {
@@ -63,7 +64,8 @@ const FULL_INCLUDE = [
   { association: 'invoice' },
 ];
 
-async function listForUser(userId, { page = 1, limit = 10 } = {}) {
+async function listForUser(userId, query = {}) {
+  const { page, limit } = parsePageParams(query, { defLimit: 10 });
   const { count, rows } = await db.Order.findAndCountAll({
     where: { user_id: userId },
     include: FULL_INCLUDE,
@@ -72,13 +74,7 @@ async function listForUser(userId, { page = 1, limit = 10 } = {}) {
     offset: (page - 1) * limit,
     distinct: true,
   });
-  return {
-    items: rows.map(serializeOrder),
-    page,
-    limit,
-    total: count,
-    total_pages: Math.ceil(count / limit) || 1,
-  };
+  return paginate(rows, count, page, limit, serializeOrder);
 }
 
 async function getForUser(userId, orderNumber) {
@@ -99,9 +95,10 @@ async function getByNumber(orderNumber) {
   return serializeOrder(order);
 }
 
-async function listAll({ page = 1, limit = 20, status = null } = {}) {
+async function listAll(query = {}) {
+  const { page, limit } = parsePageParams(query);
   const where = {};
-  if (status) where.status = status;
+  if (query.status) where.status = query.status;
   const { count, rows } = await db.Order.findAndCountAll({
     where,
     include: FULL_INCLUDE,
@@ -110,13 +107,7 @@ async function listAll({ page = 1, limit = 20, status = null } = {}) {
     offset: (page - 1) * limit,
     distinct: true,
   });
-  return {
-    items: rows.map(serializeOrder),
-    page,
-    limit,
-    total: count,
-    total_pages: Math.ceil(count / limit) || 1,
-  };
+  return paginate(rows, count, page, limit, serializeOrder);
 }
 
 module.exports = { serializeOrder, listForUser, getForUser, getByNumber, listAll };

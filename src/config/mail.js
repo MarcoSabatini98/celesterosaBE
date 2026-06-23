@@ -5,7 +5,6 @@
 // inutili all'avvio e per consentire i test senza SMTP reale.
 
 const nodemailer = require('nodemailer');
-const logger = require('../utils/logger');
 
 let transporter = null;
 
@@ -30,13 +29,4 @@ function getTransporter() {
 
 const mailFrom = process.env.MAIL_FROM || 'celesterosa <no-reply@celesterosa.it>';
 
-async function verifyMail() {
-  try {
-    await getTransporter().verify();
-    logger.info('Connessione SMTP verificata');
-  } catch (err) {
-    logger.warn(`SMTP non verificato (invio email potrebbe fallire): ${err.message}`);
-  }
-}
-
-module.exports = { getTransporter, mailFrom, verifyMail };
+module.exports = { getTransporter, mailFrom };

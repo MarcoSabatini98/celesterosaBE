@@ -6,6 +6,7 @@
 const db = require('../models');
 const AppError = require('../errors/AppError');
 const { round2 } = require('../utils/pricing');
+const { paginate, parsePageParams } = require('../utils/paginate');
 const { invoiceNumber } = require('../utils/sequence');
 const { buildInvoicePdf } = require('./pdf/invoice.pdf');
 const storage = require('./storage.service');
@@ -140,19 +141,14 @@ async function getForUserByOrder(userId, orderNumber) {
   return { ...serialize(invoice), items: invoice.items };
 }
 
-async function listAll({ page = 1, limit = 20 } = {}) {
+async function listAll(query = {}) {
+  const { page, limit } = parsePageParams(query);
   const { count, rows } = await db.Invoice.findAndCountAll({
     order: [['created_at', 'DESC']],
     limit,
     offset: (page - 1) * limit,
   });
-  return {
-    items: rows.map(serialize),
-    page,
-    limit,
-    total: count,
-    total_pages: Math.ceil(count / limit) || 1,
-  };
+  return paginate(rows, count, page, limit, serialize);
 }
 
-module.exports = { generateForOrder, serialize, getForUserByOrder, listAll };
+module.exports = { generateForOrder, getForUserByOrder, listAll };

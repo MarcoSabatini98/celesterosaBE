@@ -179,8 +179,6 @@ async function clearCart(req) {
 module.exports = {
   resolveCart,
   loadCart,
-  serializeCart,
-  effectivePrice,
   getCart,
   addItem,
   updateItem,

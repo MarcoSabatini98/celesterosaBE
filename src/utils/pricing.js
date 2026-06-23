@@ -35,4 +35,4 @@ function computeTotals(lines) {
   };
 }
 
-module.exports = { round2, computeLine, shippingFor, computeTotals, SHIPPING_FLAT, SHIPPING_FREE_THRESHOLD };
+module.exports = { round2, computeLine, shippingFor, computeTotals };
