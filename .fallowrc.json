@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": [
+    "server.js",
+    "app.js",
+    "src/config/sequelize.config.js",
+    "src/models/*.js",
+    "database/migrations/*.js",
+    "database/seeders/*.js"
+  ],
+  "duplicates": {
+    "minOccurrences": 3
+  },
+  "ignoreDependencies": [
+    "mysql2"
+  ],
+  "rules": {
+    "unused-dependencies": "warn",
+    "duplicate-exports": "off"
+  }
+}
