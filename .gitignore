@@ -1,0 +1,41 @@
+# Dipendenze
+node_modules/
+
+# Variabili d'ambiente e segreti — MAI nel repo
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+config/secrets*.js
+
+# Credenziali Stripe / chiavi pagamento (in chiaro mai versionate)
+stripe-*.json
+
+# Output runtime
+logs/
+*.log
+uploads/
+coverage/
+
+# Fatture / PDF generati
+invoices/
+*.pdf
+
+# Artefatti Swagger / test
+swagger.json
+**/swagger.json
+**/collection.auto.json
+**/*-report.html
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+.claude/settings.local.json
+
+# Note personali
+*.local.md
+.notes/
+spiegazioni/
