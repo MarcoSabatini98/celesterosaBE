@@ -18,7 +18,15 @@ function validate(schema, source = 'body') {
       return next(AppError.unprocessable(message));
     }
 
-    req[source] = value;
+    // In Express 5 req.query è un getter read-only: l'assegnazione diretta
+    // fallisce. defineProperty sostituisce la sorgente in modo uniforme sia per
+    // body sia per query.
+    Object.defineProperty(req, source, {
+      value,
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
     return next();
   };
 }
