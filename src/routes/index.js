@@ -33,6 +33,9 @@ router.use('/cart', require('./cart.routes'));
 router.use('/checkout', require('./checkout.routes'));
 router.use('/stripe', require('./stripe.routes'));
 
-// Le altre route (orders, admin...) verranno montate qui nelle fasi successive.
+// Area ordini cliente
+router.use('/orders', require('./order.routes'));
+
+// Le altre route (admin...) verranno montate qui nelle fasi successive.
 
 module.exports = router;

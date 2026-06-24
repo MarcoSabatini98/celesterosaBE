@@ -34,6 +34,26 @@ function findByNumber(orderNumber) {
   return Order.findOne({ where: { order_number: orderNumber }, include: orderInclude() });
 }
 
+// Ordine per numero ma vincolato al proprietario (area cliente).
+function findByNumberForUser(orderNumber, userId) {
+  return Order.findOne({
+    where: { order_number: orderNumber, user_id: userId },
+    include: orderInclude(),
+  });
+}
+
+// Lista paginata degli ordini di un utente (più recenti prima).
+function findAndCountByUser(userId, { limit, offset }) {
+  return Order.findAndCountAll({
+    where: { user_id: userId },
+    include: orderInclude(),
+    order: [['createdAt', 'DESC']],
+    limit,
+    offset,
+    distinct: true,
+  });
+}
+
 function findPaymentByIntent(paymentIntentId) {
   return Payment.findOne({
     where: { stripe_payment_intent_id: paymentIntentId },
@@ -62,6 +82,8 @@ module.exports = {
   createPayment,
   reloadOrder,
   findByNumber,
+  findByNumberForUser,
+  findAndCountByUser,
   findPaymentByIntent,
   getItems,
   decrementStock,
