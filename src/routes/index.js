@@ -36,6 +36,7 @@ router.use('/stripe', require('./stripe.routes'));
 // Area ordini cliente
 router.use('/orders', require('./order.routes'));
 
-// Le altre route (admin...) verranno montate qui nelle fasi successive.
+// Area amministrativa (ruolo admin)
+router.use('/admin', require('./admin.routes'));
 
 module.exports = router;

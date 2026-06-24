@@ -54,6 +54,17 @@ function findAndCountByUser(userId, { limit, offset }) {
   });
 }
 
+// Lista paginata di TUTTI gli ordini (area admin).
+function findAndCountAll({ limit, offset }) {
+  return Order.findAndCountAll({
+    include: orderInclude(),
+    order: [['createdAt', 'DESC']],
+    limit,
+    offset,
+    distinct: true,
+  });
+}
+
 function findPaymentByIntent(paymentIntentId) {
   return Payment.findOne({
     where: { stripe_payment_intent_id: paymentIntentId },
@@ -84,6 +95,7 @@ module.exports = {
   findByNumber,
   findByNumberForUser,
   findAndCountByUser,
+  findAndCountAll,
   findPaymentByIntent,
   getItems,
   decrementStock,
