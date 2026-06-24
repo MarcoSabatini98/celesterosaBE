@@ -18,9 +18,11 @@ router.get('/health', (req, res) =>
   sendSuccess(res, 200, { status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() }),
 );
 
-// Le route dei moduli (auth, catalog, cart, orders, admin, stripe...) verranno
-// montate qui nelle fasi successive, es.:
-//   router.use('/auth', require('./auth.routes'));
+// ── Moduli applicativi ────────────────────────────────────────
+router.use('/auth', require('./auth.routes'));
+
+// Le altre route (catalog, cart, orders, admin, stripe...) verranno montate
+// qui nelle fasi successive, es.:
 //   router.use('/products', require('./product.routes'));
 
 module.exports = router;
