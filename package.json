@@ -25,6 +25,37 @@
     "test:integration": "cross-env NODE_ENV=test jest --selectProjects integration --runInBand --forceExit",
     "test:coverage": "cross-env NODE_ENV=test jest --coverage --runInBand --forceExit"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "projects": [
+      {
+        "displayName": "unit",
+        "testEnvironment": "node",
+        "testMatch": [
+          "**/src/tests/unit/**/*.test.js"
+        ],
+        "setupFiles": [
+          "./jest.setup.js"
+        ],
+        "setupFilesAfterEnv": [
+          "./src/tests/unit.setup.js"
+        ]
+      },
+      {
+        "displayName": "integration",
+        "testEnvironment": "node",
+        "testMatch": [
+          "**/src/tests/integration/**/*.test.js"
+        ],
+        "setupFiles": [
+          "./jest.setup.js"
+        ],
+        "setupFilesAfterEnv": [
+          "./src/tests/setup.js"
+        ]
+      }
+    ]
+  },
   "keywords": [
     "ecommerce",
     "strumenti-musicali",
