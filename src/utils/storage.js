@@ -12,4 +12,9 @@ async function putObject(objectKey, buffer, contentType = 'application/octet-str
   return objectKey;
 }
 
-module.exports = { putObject };
+// Rimuove un oggetto (best-effort: gli errori sono propagati al chiamante).
+async function removeObject(objectKey) {
+  await minioClient.removeObject(BUCKET, objectKey);
+}
+
+module.exports = { putObject, removeObject };
