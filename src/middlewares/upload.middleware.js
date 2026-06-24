@@ -20,5 +20,8 @@ const upload = multer({
 
 // Campo form 'images' (vedi AdminService.uploadImages lato FE).
 const uploadProductImages = upload.array('images', MAX_FILES);
+// Upload singolo: logo marca / immagine categoria.
+const uploadBrandLogo = upload.single('logo');
+const uploadCategoryImage = upload.single('image');
 
-module.exports = { uploadProductImages };
+module.exports = { uploadProductImages, uploadBrandLogo, uploadCategoryImage };
