@@ -110,4 +110,4 @@ async function clear(req) {
   return serialized(cart.id);
 }
 
-module.exports = { getCart, addItem, updateItem, removeItem, clear };
+module.exports = { getCart, addItem, updateItem, removeItem, clear, resolveCart };
