@@ -43,4 +43,7 @@ router.patch(
   controller.updateOrderStatus,
 );
 
+// ── Marche & categorie ────────────────────────────────────────
+router.use(require('./admin-taxonomy.routes'));
+
 module.exports = router;
