@@ -20,10 +20,11 @@
     "seed:undo": "cross-env NODE_ENV=development sequelize-cli db:seed:undo:all",
     "db:setup": "npm run db:create && npm run migrate && npm run seed",
     "db:reset": "npm run migrate:undo:all && npm run migrate && npm run seed",
-    "test": "cross-env NODE_ENV=test jest --runInBand --forceExit",
+    "db:test:setup": "node src/tests/setup-db.js",
+    "test": "npm run db:test:setup && cross-env NODE_ENV=test jest --runInBand --forceExit",
     "test:unit": "cross-env NODE_ENV=test jest --selectProjects unit --forceExit",
-    "test:integration": "cross-env NODE_ENV=test jest --selectProjects integration --runInBand --forceExit",
-    "test:coverage": "cross-env NODE_ENV=test jest --coverage --runInBand --forceExit"
+    "test:integration": "npm run db:test:setup && cross-env NODE_ENV=test jest --selectProjects integration --runInBand --forceExit",
+    "test:coverage": "npm run db:test:setup && cross-env NODE_ENV=test jest --coverage --runInBand --forceExit"
   },
   "keywords": [
     "ecommerce",
@@ -37,6 +38,11 @@
   "license": "MIT",
   "jest": {
     "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/tests/**",
+      "!src/config/swagger.js"
+    ],
     "projects": [
       {
         "displayName": "unit",
@@ -48,6 +54,9 @@
       {
         "displayName": "integration",
         "testEnvironment": "node",
+        "setupFiles": [
+          "<rootDir>/src/tests/setup.env.js"
+        ],
         "testMatch": [
           "<rootDir>/src/tests/integration/**/*.test.js"
         ]
@@ -87,6 +96,7 @@
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
     "prettier": "^3.8.1",
-    "sequelize-cli": "^6.6.5"
+    "sequelize-cli": "^6.6.5",
+    "supertest": "^7.2.2"
   }
 }

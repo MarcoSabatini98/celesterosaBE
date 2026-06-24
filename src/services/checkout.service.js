@@ -24,6 +24,30 @@ function addrToOrder(prefix, a) {
   };
 }
 
+// Valida una riga di carrello e la trasforma in riga d'ordine (snapshot).
+function toOrderItem(item) {
+  const v = item.variant;
+  const p = v?.product;
+  if (!v || !v.is_active || !p || !p.is_active) {
+    throw AppError.conflict(`Articolo non più disponibile: ${p?.name || 'sconosciuto'}`);
+  }
+  if (v.stock < item.quantity) {
+    throw AppError.conflict(`Disponibilità insufficiente per ${p.name} (${v.stock})`);
+  }
+  const vat = Number(p.vat_rate);
+  const calc = computeLine(Number(item.unit_price), item.quantity, vat);
+  return {
+    product_variant_id: v.id,
+    product_name: p.name,
+    variant_name: v.name,
+    sku: v.sku,
+    unit_price: Number(item.unit_price),
+    quantity: item.quantity,
+    vat_rate: vat,
+    ...calc,
+  };
+}
+
 async function createCheckout(req, data) {
   const cart = await cartService.resolveCart(req, { create: false });
   if (!cart) throw AppError.badRequest('Carrello vuoto');
@@ -33,31 +57,7 @@ async function createCheckout(req, data) {
   const email = req.user ? req.user.email : data.email;
   if (!email) throw AppError.badRequest('Email obbligatoria per il checkout come ospite');
 
-  // Costruisce le righe d'ordine validando disponibilità e stato.
-  const orderItems = [];
-  for (const item of full.items) {
-    const v = item.variant;
-    const p = v?.product;
-    if (!v || !v.is_active || !p || !p.is_active) {
-      throw AppError.conflict(`Articolo non più disponibile: ${p?.name || 'sconosciuto'}`);
-    }
-    if (v.stock < item.quantity) {
-      throw AppError.conflict(`Disponibilità insufficiente per ${p.name} (${v.stock})`);
-    }
-    const vat = Number(p.vat_rate);
-    const calc = computeLine(Number(item.unit_price), item.quantity, vat);
-    orderItems.push({
-      product_variant_id: v.id,
-      product_name: p.name,
-      variant_name: v.name,
-      sku: v.sku,
-      unit_price: Number(item.unit_price),
-      quantity: item.quantity,
-      vat_rate: vat,
-      ...calc,
-    });
-  }
-
+  const orderItems = full.items.map(toOrderItem);
   const totals = computeTotals(orderItems);
   const billing = data.same_billing === false ? data.billing : data.shipping;
 

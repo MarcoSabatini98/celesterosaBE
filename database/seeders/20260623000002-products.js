@@ -29,6 +29,8 @@ function eavValue(dataType, raw) {
 }
 
 module.exports = {
+  // Seeder one-off: complessità ammessa (script di dati, non logica runtime).
+  // fallow-ignore-next-line complexity
   async up() {
     for (const p of productsData) {
       const category = await db.Category.findOne({ where: { slug: p.cat } });

@@ -5,11 +5,18 @@
     "app.js",
     "src/config/sequelize.config.js",
     "src/models/*.js",
+    "src/tests/setup-db.js",
+    "src/tests/setup.env.js",
     "database/migrations/*.js",
     "database/seeders/*.js"
   ],
   "duplicates": {
     "minOccurrences": 3
+  },
+  "health": {
+    "maxCyclomatic": 12,
+    "maxCognitive": 15,
+    "maxCrap": 30
   },
   "ignoreDependencies": [
     "mysql2"

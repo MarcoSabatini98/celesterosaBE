@@ -111,7 +111,9 @@ async function fulfillPaidOrder(paymentIntentId, eventPayload = null) {
   });
 }
 
-// Verifica la firma del webhook e processa gli eventi rilevanti.
+// Verifica la firma del webhook e processa gli eventi rilevanti. Richiede una
+// firma Stripe reale: non testabile in modalità simulata.
+// fallow-ignore-next-line complexity
 async function handleWebhook(rawBody, signature) {
   if (!enabled) throw AppError.badRequest('Webhook Stripe non attivo in modalità simulata');
 

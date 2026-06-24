@@ -74,29 +74,34 @@ async function mergeGuestCart(guestToken, userCart) {
   await guest.save();
 }
 
+function serializeCartItem(it) {
+  // variant e product sono sempre caricati via include: default difensivi
+  // minimi senza optional-chaining (che gonfierebbe la complessità).
+  const v = it.variant || {};
+  const p = v.product || {};
+  const stock = v.stock || 0;
+  const vat = Number(p.vat_rate || 22);
+  const calc = computeLine(Number(it.unit_price), it.quantity, vat);
+  const imgs = p.images || [];
+  return {
+    item_id: it.id,
+    variant_id: it.product_variant_id,
+    product_name: p.name,
+    product_slug: p.slug,
+    variant_name: v.name,
+    sku: v.sku,
+    unit_price: round2(it.unit_price),
+    quantity: it.quantity,
+    vat_rate: vat,
+    ...calc,
+    stock,
+    in_stock: stock >= it.quantity,
+    image: imgs.length ? imgs[0].object_key : null,
+  };
+}
+
 function serializeCart(cart) {
-  const items = (cart.items || []).map((it) => {
-    const v = it.variant;
-    const p = v?.product;
-    const vat = Number(p?.vat_rate ?? 22);
-    const calc = computeLine(Number(it.unit_price), it.quantity, vat);
-    const imgs = p?.images || [];
-    return {
-      item_id: it.id,
-      variant_id: it.product_variant_id,
-      product_name: p?.name,
-      product_slug: p?.slug,
-      variant_name: v?.name,
-      sku: v?.sku,
-      unit_price: round2(it.unit_price),
-      quantity: it.quantity,
-      vat_rate: vat,
-      ...calc,
-      stock: v?.stock,
-      in_stock: (v?.stock ?? 0) >= it.quantity,
-      image: imgs.length ? imgs[0].object_key : null,
-    };
-  });
+  const items = (cart.items || []).map(serializeCartItem);
   const totals = computeTotals(items);
   return {
     cart_token: cart.token,

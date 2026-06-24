@@ -44,6 +44,8 @@ const start = async () => {
   }
 };
 
+// Lifecycle di shutdown: gestione segnali/timeout difficile da unit-testare.
+// fallow-ignore-next-line complexity
 const shutdown = async (signal) => {
   if (shuttingDown) return;
   shuttingDown = true;

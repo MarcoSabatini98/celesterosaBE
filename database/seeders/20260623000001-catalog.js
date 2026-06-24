@@ -9,6 +9,7 @@ const { brands, taxonomy } = require('../seed-helpers/catalog-data');
 
 const TYPE = { s: 'string', n: 'number', d: 'date', b: 'boolean', e: 'enum' };
 
+// fallow-ignore-next-line complexity
 async function seedAttributes(categoryId, attrs = []) {
   let sort = 0;
   for (const a of attrs) {
@@ -30,6 +31,8 @@ async function seedAttributes(categoryId, attrs = []) {
 }
 
 module.exports = {
+  // Seeder one-off: complessità ammessa (script di dati, non logica runtime).
+  // fallow-ignore-next-line complexity
   async up() {
     // Brand.
     for (const b of brands) {
