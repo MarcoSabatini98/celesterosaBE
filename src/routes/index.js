@@ -21,8 +21,12 @@ router.get('/health', (req, res) =>
 // ── Moduli applicativi ────────────────────────────────────────
 router.use('/auth', require('./auth.routes'));
 
-// Le altre route (catalog, cart, orders, admin, stripe...) verranno montate
-// qui nelle fasi successive, es.:
-//   router.use('/products', require('./product.routes'));
+// Catalogo pubblico
+router.use('/categories', require('./category.routes'));
+router.use('/brands', require('./brand.routes'));
+router.use('/products', require('./product.routes'));
+
+// Le altre route (cart, orders, admin, stripe...) verranno montate qui nelle
+// fasi successive.
 
 module.exports = router;
