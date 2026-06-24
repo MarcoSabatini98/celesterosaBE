@@ -29,7 +29,10 @@ router.use('/products', require('./product.routes'));
 // Carrello (utente o guest)
 router.use('/cart', require('./cart.routes'));
 
-// Le altre route (orders, admin, stripe...) verranno montate qui nelle fasi
-// successive.
+// Checkout + pagamento (sandbox simulato)
+router.use('/checkout', require('./checkout.routes'));
+router.use('/stripe', require('./stripe.routes'));
+
+// Le altre route (orders, admin...) verranno montate qui nelle fasi successive.
 
 module.exports = router;
