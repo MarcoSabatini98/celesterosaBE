@@ -80,6 +80,18 @@ function toOrder(order) {
   };
 }
 
+// Risultato dell'endpoint fattura: metadati + invoice_number (il FE legge
+// entrambi number e invoice_number).
+function toInvoiceResult(invoice) {
+  if (!invoice) return null;
+  return {
+    number: invoice.invoice_number,
+    invoice_number: invoice.invoice_number,
+    status: invoice.status,
+    pdf_url: mediaUrl(invoice.pdf_key),
+  };
+}
+
 // Esito del checkout: ordine + dati del pagamento (sandbox simulato).
 function toCheckoutResult(order, payment) {
   return {
@@ -93,4 +105,4 @@ function toCheckoutResult(order, payment) {
   };
 }
 
-module.exports = { toOrder, toOrderItem, toCheckoutResult };
+module.exports = { toOrder, toOrderItem, toCheckoutResult, toInvoiceResult };
