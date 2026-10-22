@@ -39,14 +39,15 @@ async function authenticate(req, _res, next) {
   }
 }
 
-async function optionalAuth(req, _res, next) {
-  try {
-    const token = extractBearer(req);
-    req.user = token ? await resolveUser(token) : null;
-  } catch {
+// Senza token → guest. Con token non valido/scaduto → 401 come authenticate:
+// trattarlo da guest farebbe sparire carrello ed email dell'utente loggato,
+// mentre il 401 fa scattare refresh + retry lato client.
+async function optionalAuth(req, res, next) {
+  if (!extractBearer(req)) {
     req.user = null;
+    return next();
   }
-  return next();
+  return authenticate(req, res, next);
 }
 
 function requireRole(...roles) {
