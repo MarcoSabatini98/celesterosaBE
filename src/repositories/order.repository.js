@@ -72,6 +72,23 @@ function findPaymentByIntent(paymentIntentId) {
   });
 }
 
+// Pagamento di un ordine (riconciliazione via metadata.order_id del webhook /
+// della Checkout Session).
+function findPaymentByOrderId(orderId) {
+  return Payment.findOne({
+    where: { order_id: orderId },
+    include: [{ model: Order, as: 'order' }],
+  });
+}
+
+// Lega il PaymentIntent della Checkout Session al Payment dell'ordine.
+function setPaymentIntent(orderId, paymentIntentId) {
+  return Payment.update(
+    { stripe_payment_intent_id: paymentIntentId },
+    { where: { order_id: orderId } },
+  );
+}
+
 function getItems(orderId, transaction) {
   return OrderItem.findAll({ where: { order_id: orderId }, transaction });
 }
@@ -97,6 +114,8 @@ module.exports = {
   findAndCountByUser,
   findAndCountAll,
   findPaymentByIntent,
+  findPaymentByOrderId,
+  setPaymentIntent,
   getItems,
   decrementStock,
 };
