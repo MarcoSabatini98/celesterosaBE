@@ -26,3 +26,6 @@ process.env.MINIO_BUCKET ??= 'celesterosa-images';
 
 // Stripe: nei test sempre il pagamento simulato (niente chiamate a Stripe).
 process.env.STRIPE_SECRET_KEY ??= '';
+
+// Storage: nei test mai Cloudinary (MinIO locale).
+process.env.CLOUDINARY_URL ??= '';
