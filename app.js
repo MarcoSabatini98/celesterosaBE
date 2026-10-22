@@ -19,7 +19,9 @@ const { notFoundHandler, errorHandler } = require('./src/middlewares/error.middl
 const app = express();
 
 // Dietro reverse-proxy (deploy) per IP reale e rate-limit corretto.
-app.set('trust proxy', 1);
+// TRUST_PROXY = quanti proxy stanno davanti (Render: 1; Vercel + Render: 2).
+// Più alto del vero = chiunque può fingersi un altro IP via X-Forwarded-For.
+app.set('trust proxy', Number(process.env.TRUST_PROXY || 1));
 
 // ── Sicurezza & performance ───────────────────────────────────
 app.use(helmet());

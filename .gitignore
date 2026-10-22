@@ -6,6 +6,8 @@ node_modules/
 .env.*
 !.env.example
 *.pem
+# certificato CA pubblico di Aiven (non è un segreto)
+!aiven-ca.pem
 *.key
 secrets/
 config/secrets*.js

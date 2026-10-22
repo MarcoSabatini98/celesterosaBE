@@ -20,12 +20,15 @@ const start = async () => {
     logger.info('Connessione al database riuscita');
 
     // Garantisce il bucket immagini su MinIO (non blocca l'avvio se MinIO
-    // non è raggiungibile in locale: viene loggato un warning).
-    try {
-      const { ensureBucket } = require('./src/config/minio');
-      await ensureBucket();
-    } catch (err) {
-      logger.warn(`MinIO non disponibile all'avvio: ${err.message}`);
+    // non è raggiungibile in locale: viene loggato un warning). Con
+    // Cloudinary (deploy) non serve.
+    if (!process.env.CLOUDINARY_URL) {
+      try {
+        const { ensureBucket } = require('./src/config/minio');
+        await ensureBucket();
+      } catch (err) {
+        logger.warn(`MinIO non disponibile all'avvio: ${err.message}`);
+      }
     }
 
     server = http.createServer(app);

@@ -89,7 +89,11 @@ async function tryStorePdf(invoice, items) {
 // essere già caricato con le sue righe.
 async function ensureInvoice(order) {
   const existing = await invoiceRepository.findByOrderId(order.id);
-  if (existing) return existing;
+  if (existing) {
+    // Fattura senza PDF (es. creata dal seed o upload fallito): lo genera ora.
+    if (!existing.pdf_key) await tryStorePdf(existing, existing.items || []);
+    return existing;
+  }
 
   const items = buildItems(order);
   const taxableTotal = round2(items.reduce((s, i) => s + i.taxable_amount, 0));
