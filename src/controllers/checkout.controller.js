@@ -13,4 +13,17 @@ async function simulatePayment(req, res) {
   return sendSuccess(res, 200, await checkoutService.simulatePayment(req.body.payment_intent_id));
 }
 
-module.exports = { createCheckout, simulatePayment };
+// GET /stripe/session/:id — riconciliazione al ritorno su /checkout/success.
+async function confirmSession(req, res) {
+  return sendSuccess(res, 200, await checkoutService.reconcileSession(req.params.id));
+}
+
+// POST /stripe/webhook — sorgente primaria. NON in JSend: Stripe usa solo lo
+// status code per decidere il retry. req.body è il raw Buffer (express.raw).
+async function webhook(req, res) {
+  const signature = req.headers['stripe-signature'];
+  const result = await checkoutService.handleWebhook(req.body, signature);
+  return res.status(200).json(result);
+}
+
+module.exports = { createCheckout, simulatePayment, confirmSession, webhook };

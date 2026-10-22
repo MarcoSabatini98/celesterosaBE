@@ -92,14 +92,18 @@ function toInvoiceResult(invoice) {
   };
 }
 
-// Esito del checkout: ordine + dati del pagamento (sandbox simulato).
+// Esito del checkout: ordine + dati del pagamento. Con Stripe reale espone
+// `payment_url` (Checkout Session hosted) per il redirect del client; nel
+// fallback simulato espone `client_secret`/`payment_intent_id` + simulated.
 function toCheckoutResult(order, payment) {
   return {
     order: toOrder(order),
     payment: {
-      client_secret: payment.client_secret,
-      payment_intent_id: payment.payment_intent_id,
-      simulated: payment.simulated,
+      payment_url: payment.payment_url ?? null,
+      session_id: payment.session_id ?? null,
+      client_secret: payment.client_secret ?? null,
+      payment_intent_id: payment.payment_intent_id ?? null,
+      simulated: payment.simulated ?? false,
       publishable_key: payment.publishable_key ?? null,
     },
   };

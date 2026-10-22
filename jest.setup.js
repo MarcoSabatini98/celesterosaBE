@@ -23,3 +23,6 @@ process.env.MINIO_ENDPOINT ??= '127.0.0.1';
 process.env.MINIO_ACCESS_KEY ??= 'minioadmin';
 process.env.MINIO_SECRET_KEY ??= 'minioadmin';
 process.env.MINIO_BUCKET ??= 'celesterosa-images';
+
+// Stripe: nei test sempre il pagamento simulato (niente chiamate a Stripe).
+process.env.STRIPE_SECRET_KEY ??= '';
