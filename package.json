@@ -1,13 +1,106 @@
 {
   "name": "celesterosabe",
   "version": "1.0.0",
-  "description": "Negozio di strumenti musicali",
-  "main": "index.js",
+  "description": "Backend e-commerce per negozio di strumenti musicali — Express + MariaDB",
+  "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "docker compose up -d && nodemon --ext js,yaml,yml server.js",
+    "dev:local": "nodemon --ext js,yaml,yml server.js",
+    "lint": "eslint . && echo \"Lint OK\"",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "db:create": "cross-env NODE_ENV=development sequelize-cli db:create",
+    "migrate": "cross-env NODE_ENV=development sequelize-cli db:migrate",
+    "migrate:undo": "cross-env NODE_ENV=development sequelize-cli db:migrate:undo",
+    "migrate:undo:all": "cross-env NODE_ENV=development sequelize-cli db:migrate:undo:all",
+    "migrate:status": "cross-env NODE_ENV=development sequelize-cli db:migrate:status",
+    "seed": "cross-env NODE_ENV=development sequelize-cli db:seed:all",
+    "seed:undo": "cross-env NODE_ENV=development sequelize-cli db:seed:undo:all",
+    "db:setup": "npm run db:create && npm run migrate && npm run seed",
+    "db:reset": "npm run migrate:undo:all && npm run migrate && npm run seed",
+    "test": "cross-env NODE_ENV=test jest --runInBand --forceExit",
+    "test:unit": "cross-env NODE_ENV=test jest --selectProjects unit --forceExit",
+    "test:integration": "cross-env NODE_ENV=test jest --selectProjects integration --runInBand --forceExit",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage --runInBand --forceExit"
   },
-  "keywords": [],
+  "jest": {
+    "testEnvironment": "node",
+    "projects": [
+      {
+        "displayName": "unit",
+        "testEnvironment": "node",
+        "testMatch": [
+          "**/src/tests/unit/**/*.test.js"
+        ],
+        "setupFiles": [
+          "./jest.setup.js"
+        ],
+        "setupFilesAfterEnv": [
+          "./src/tests/unit.setup.js"
+        ]
+      },
+      {
+        "displayName": "integration",
+        "testEnvironment": "node",
+        "testMatch": [
+          "**/src/tests/integration/**/*.test.js"
+        ],
+        "setupFiles": [
+          "./jest.setup.js"
+        ],
+        "setupFilesAfterEnv": [
+          "./src/tests/setup.js"
+        ]
+      }
+    ]
+  },
+  "keywords": [
+    "ecommerce",
+    "strumenti-musicali",
+    "express",
+    "sequelize",
+    "mariadb",
+    "stripe"
+  ],
   "author": "Marco Sabatini",
   "license": "MIT",
-  "type": "commonjs"
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
+    "helmet": "^8.1.0",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "minio": "^8.0.7",
+    "moment-timezone": "^0.6.1",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1",
+    "mysql2": "^3.20.0",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^8.0.4",
+    "pdf-lib": "^1.17.1",
+    "sequelize": "^6.37.8",
+    "slugify": "^1.6.6",
+    "stripe": "^22.0.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^15.14.0",
+    "jest": "^30.3.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.8.1",
+    "sequelize-cli": "^6.6.5",
+    "supertest": "^7.2.2"
+  }
 }

@@ -1,0 +1,51 @@
+# docker-compose per i servizi di sviluppo locale di celesterosaBE.
+#
+#   MariaDB = database relazionale del catalogo/ordini/fatture.
+#   MinIO   = object storage S3-compatibile per le immagini dei prodotti.
+#
+# Avvio:        docker compose up -d
+# Stop:         docker compose down            (i dati restano sui volumi)
+# Wipe totale:  docker compose down -v         (CANCELLA anche i dati!)
+#
+# Console MinIO: http://localhost:9001  (login MINIO_ACCESS_KEY / MINIO_SECRET_KEY)
+# API S3 MinIO:  http://localhost:9000
+# MariaDB:       localhost:3306
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: celesterosa-mariadb
+    ports:
+      - '3306:3306'
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${DB_NAME:-celesterosa}
+      MARIADB_USER: ${DB_USER:-celesterosa}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-celesterosa}
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    container_name: celesterosa-minio
+    command: server /data --console-address ":9001"
+    ports:
+      - '9000:9000' # API S3
+      - '9001:9001' # Console web
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+
+volumes:
+  mariadb_data:
+  minio_data:
