@@ -23,6 +23,13 @@ describe('Cart API', () => {
       expect(res.body.data).toMatchObject({ cart_token: null, item_count: 0, grand_total: 0 });
       expect(res.body.data.items).toHaveLength(0);
     });
+
+    // Token scaduto/non valido: 401 (il client fa refresh e riprova), non
+    // degrado silenzioso a guest che mostrerebbe un carrello vuoto.
+    it('401 con Bearer non valido', async () => {
+      const res = await request(app).get(`${BASE}/cart`).set('Authorization', 'Bearer non.valido');
+      expect(res.status).toBe(401);
+    });
   });
 
   describe('POST /cart/items (guest)', () => {
